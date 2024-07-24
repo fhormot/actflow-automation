@@ -14,12 +14,13 @@ if __name__ == "__main__":
     with open(filename) as f:
         lines = f.readlines()
 
+    # TODO: Read config file for the technology and check for []
     # Mangle character roll-back for indexed ports
-    lines = [re.sub(r'_5', '[', line) for line in lines]
-    lines = [re.sub(r'_6', ']', line) for line in lines]
+    #lines = [re.sub(r'_5', '[', line) for line in lines]
+    #lines = [re.sub(r'_6', ']', line) for line in lines]
 
     # Remove other mangle characters
-    lines = [re.sub(r'_\d+', '', line) for line in lines]
+    lines = [re.sub(r'_[0-9]', '', line) for line in lines]
 
     # Suffix underscore removal
     lines = [re.sub(r'_\ ', r' ', line) for line in lines]
