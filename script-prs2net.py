@@ -9,11 +9,14 @@ import argparse
 import re
 import os
 
-def execute_prs2net(item, filename):
+def execute_prs2net(item, filename, tech_name):
     """
     Execute script "prs2net"
     """
-    cmd = f"prs2net -p cell::{item} -o {item}.sp {filename}"
+
+    tech_arg = f'-T{tech_name}' if tech_name else ""
+
+    cmd = f"prs2net {tech_arg} -p cell::{item} -o {item}.sp {filename}"
     print(f'{cmd}')
     subprocess.call(cmd, shell=True)
 
@@ -59,16 +62,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", help="Input file containing prs declarations.")
     parser.add_argument("-o", "--output", help="Output SPICE file.")
+    parser.add_argument("-T", "--tech", help="Technology select.")
     args = parser.parse_args()
 
     input_file = args.input
     output_file = args.output
+    tech_name = args.tech if args.tech else ""
 
     # Get list of processes from file
     list_proc = retrieve_processes(input_file)
 
     for item in list_proc:
-      execute_prs2net(item, input_file)
+      execute_prs2net(item, input_file, tech_name)
       execute_sanitizer(item)
 
     join_files(list_proc, output_file)
