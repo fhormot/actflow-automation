@@ -8,6 +8,17 @@ fifo_synth_verilog_netlist.v and remove numbered suffixes from signals.
 import re
 import sys
 
+def sanitizer_net(line):
+    if line[0] in ['*', '.']:
+        return line
+
+    line_temp = line.split(" ")
+    for idy, element in enumerate(line_temp):
+        if element.isdigit():
+            line_temp[idy] = f'net{element}'
+
+    return ' '.join([str(x) for x in line_temp])
+
 if __name__ == "__main__":
     filename = sys.argv[1]
 
@@ -27,6 +38,12 @@ if __name__ == "__main__":
 
     # Remove namespace
     lines = [re.sub(r'cell', '', line) for line in lines]
+
+    # Remove potential : at the end of the line
+    lines = [re.sub(r' \:$', r'', line) for line in lines]
+
+    # Check for net names containing only a number
+    lines = [sanitizer_net(line) for line in lines]
 
     # Add inherited supply connectors
     #lines = [re.sub(r'.ends', r'XIVDD Vdd hSup_cell\nXIVSS GND lSup_cell\n.ends', line) for line in lines]

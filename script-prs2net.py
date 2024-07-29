@@ -50,6 +50,8 @@ def retrieve_processes(filename):
 
 def join_files(input_files, output_file):
     with open(output_file, 'w') as outfile:
+        outfile.write(f'* List of files: ' + ' '.join(input_files) + '\n')
+
         for filename in input_files:
             with open(f'{filename}.sp') as infile:
                 for line in infile:
