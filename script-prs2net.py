@@ -63,7 +63,6 @@ def join_files(input_files, output_file):
             # Delete the input file
             os.remove(f'{filename}.sp')
 
-        outfile.seek(0,0)
         outfile.write(f'* List of processes: ' + ' '.join(process_list) + '\n')
 
 if __name__ == "__main__":
