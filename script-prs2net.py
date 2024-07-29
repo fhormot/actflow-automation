@@ -50,15 +50,21 @@ def retrieve_processes(filename):
 
 def join_files(input_files, output_file):
     with open(output_file, 'w') as outfile:
-        outfile.write(f'* List of files: ' + ' '.join(input_files) + '\n')
+        process_list = []
 
         for filename in input_files:
             with open(f'{filename}.sp') as infile:
                 for line in infile:
+                    if line.startswith('.subckt'):
+                        process_list.append(line.split(' ')[1])
+
                     outfile.write(line)
                     
             # Delete the input file
             os.remove(f'{filename}.sp')
+
+        outfile.seek(0,0)
+        outfile.write(f'* List of processes: ' + ' '.join(process_list) + '\n')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
